@@ -34,15 +34,14 @@ This will create `config/credentials/development.yml.enc` and `config/credential
 
 Same for `production` (just swap --environment)
 
-## Sidekiq
+<!-- TODO: change to SolidQueue -->
+## Solid Queue Jobs
 
 Here's what you'll need to work with jobs in your development environment.
 
-1. Install redis on your dev machine `brew install redis`
-2. Now you can start redis server by running `redis-server`
-3. Start sidekiq by running `bundle exec sidekiq`
+- Start Solid Queue by running `bin/jobs`
 
-You can access the sidekiq web ui at /sidekiq (if you have admin role)
+You can access the solid queue web ui (mission control) at /jobs (if you have admin role)
 
 ## Subdomains
 

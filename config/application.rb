@@ -23,7 +23,16 @@ module Dashboard
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :solid_queue
+    config.solid_queue.connects_to = { database: { writing: :queue } }
+
+    config.mission_control.jobs.base_controller_class = "AdminController"
+    config.mission_control.jobs.http_basic_auth_enabled = false
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks])
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -38,5 +47,8 @@ module Dashboard
       g.system_tests = nil
       g.scaffold_stylesheet false
     end
+
+    # Don't generate system test files.
+    config.generators.system_tests = nil
   end
 end

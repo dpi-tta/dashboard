@@ -12,8 +12,7 @@ I have stored both the development bot and production bot's keys in Rails Creden
 
 ## Setting up the Development Environment
 
-- Ensure you have redis installed and running on your machine. Reference [How to Contribute](how-to-contribute.md) for more information.
-- Start sidekiq by running `bundle exec sidekiq`
+- Start solid queue jobs by running `bin/jobs`
 
 ## Working in Development
 

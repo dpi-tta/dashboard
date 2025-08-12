@@ -5,7 +5,7 @@ module ApplicationPolicy::AdminPanelAccessible
     dashboard?
   end
 
-  def sidekiq_panel_accessible?
+  def mission_control_panel_accessible?
     user.admin? || user.instructor? || user.teaching_assistant?
   end
 

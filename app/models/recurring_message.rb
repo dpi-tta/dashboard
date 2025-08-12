@@ -59,10 +59,7 @@ class RecurringMessage < ApplicationRecord
   def cancel_previous_job
     return if job_id.blank?
 
-    scheduled_set = Sidekiq::ScheduledSet.new
-    if (job = scheduled_set.find_job(job_id))
-      job.delete
-    end
+    SolidQueue::Job.find_by(id: job_id)&.discard
   end
 
   def calculate_next_occurrence
