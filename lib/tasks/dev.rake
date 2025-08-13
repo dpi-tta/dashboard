@@ -151,75 +151,75 @@ unless Rails.env.production?
             end
           end
         end
-      end
 
-      cohort_start_date = Date.parse("2023-01-30")
+        cohort_start_date = Date.parse("2023-01-30")
 
-      6.times do |i|
-        uploaded_file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: Rails.root.join("lib", "sample_data", "piazza-activity-#{i}.csv").open,
-          filename: "piazza-activity-#{i}.csv",
-          type: "text/plain"
-        )
-
-        cohort.piazza_activity_reports.create(
-          activity_from: cohort_start_date + i.weeks,
-          activity_until: cohort_start_date + (i + 1).weeks,
-          csv_file: uploaded_file,
-          user: users.sample
-        )
-      end
-
-      1.upto(4) do |i|
-        filename = "2022-0#{i}-01T1#{i}00_Grades-WE-2022-1.2-SDF.csv"
-        csv_file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: Rails.root.join("lib", "sample_data", filename).open,
-          type: "text/plain",
-          filename:
-        )
-
-        cohort.canvas_gradebook_snapshots.create(
-          downloaded_at: cohort_start_date + (i + 1).weeks,
-          user: users.sample,
-          csv_file:
-        )
-      end
-
-      attendance_categories = Attendance.categories.keys
-
-      start_date = 8.weeks.ago.beginning_of_week
-
-      (0..7).each do |week_offset|
-        current_week = start_date + week_offset.weeks
-
-        3.times do |event_index|
-          event_day = rand(1..5)
-          event_time = rand(9..16)
-
-          occurred_at = current_week + event_day.days + event_time.hours
-
-          attendance = cohort.attendances.create!(
-            title: [
-              "#{Faker::Educator.course_name}",
-              "#{Faker::Hacker.adjective.titleize} #{Faker::Hacker.noun.titleize} Workshop",
-              "#{Faker::ProgrammingLanguage.name} Deep Dive",
-              "Team Building: #{Faker::Team.name}",
-              "#{Faker::Job.field} Career Session"
-            ].sample,
-            category: attendance_categories.sample,
-            occurred_at: occurred_at,
-            roll_taker: users.sample
+        6.times do |i|
+          uploaded_file = ActionDispatch::Http::UploadedFile.new(
+            tempfile: Rails.root.join("lib", "sample_data", "piazza-activity-#{i}.csv").open,
+            filename: "piazza-activity-#{i}.csv",
+            type: "text/plain"
           )
 
-          attendance_rate = rand(70..100) / 100.0
+          cohort.piazza_activity_reports.create(
+            activity_from: cohort_start_date + i.weeks,
+            activity_until: cohort_start_date + (i + 1).weeks,
+            csv_file: uploaded_file,
+            user: users.sample
+          )
+        end
 
-          student_enrollments = cohort.enrollments.student
-          attending_students = student_enrollments.sample(
-            (student_enrollments.count * attendance_rate).round
+        1.upto(4) do |i|
+          filename = "2022-0#{i}-01T1#{i}00_Grades-WE-2022-1.2-SDF.csv"
+          csv_file = ActionDispatch::Http::UploadedFile.new(
+            tempfile: Rails.root.join("lib", "sample_data", filename).open,
+            type: "text/plain",
+            filename:
           )
 
-          attending_students.each do |enrollment|
-            attendance.attendees.create!(enrollment: enrollment)
+          cohort.canvas_gradebook_snapshots.create(
+            downloaded_at: cohort_start_date + (i + 1).weeks,
+            user: users.sample,
+            csv_file:
+          )
+        end
+
+        attendance_categories = Attendance.categories.keys
+
+        start_date = 8.weeks.ago.beginning_of_week
+
+        (0..7).each do |week_offset|
+          current_week = start_date + week_offset.weeks
+
+          3.times do |event_index|
+            event_day = rand(1..5)
+            event_time = rand(9..16)
+
+            occurred_at = current_week + event_day.days + event_time.hours
+
+            attendance = cohort.attendances.create!(
+              title: [
+                "#{Faker::Educator.course_name}",
+                "#{Faker::Hacker.adjective.titleize} #{Faker::Hacker.noun.titleize} Workshop",
+                "#{Faker::ProgrammingLanguage.name} Deep Dive",
+                "Team Building: #{Faker::Team.name}",
+                "#{Faker::Job.field} Career Session"
+              ].sample,
+              category: attendance_categories.sample,
+              occurred_at: occurred_at,
+              roll_taker: users.sample
+            )
+
+            attendance_rate = rand(70..100) / 100.0
+
+            student_enrollments = cohort.enrollments.student
+            attending_students = student_enrollments.sample(
+              (student_enrollments.count * attendance_rate).round
+            )
+
+            attending_students.each do |enrollment|
+              attendance.attendees.create!(enrollment: enrollment)
+            end
           end
         end
       end
