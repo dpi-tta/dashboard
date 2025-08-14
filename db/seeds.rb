@@ -45,7 +45,6 @@ admins.each do |user_info|
   user.add_role(:admin)
 end
 
-
 teaching_assistants = [
   {
     email: "mary@dpi.dev",
@@ -133,3 +132,8 @@ teaching_assistants = [
     last_name: "Leavell"
   }
 ]
+
+teaching_assistants.each do |user_info|
+  user = User.create(user_info.merge(password: "password"))
+  user.enrollments.create(cohort: Cohort.first, role: :teaching_assistant)
+end
