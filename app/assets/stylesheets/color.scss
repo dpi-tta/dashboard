@@ -27,6 +27,10 @@
   background-color: var(--digital-blue);
 }
 
+.bg-dpi-secondary {
+  background-color: var(--terminal-green);
+}
+
 .border-dpi-primary {
   border: var(--bs-border-width) var(--bs-border-style) var(--digital-blue);
   --bs-border-opacity: 1;
@@ -45,4 +49,9 @@
 .text-dpi-secondary {
   --bs-text-opacity: 1;
   color: var(--terminal-green) !important;
+}
+
+.text-dpi-black {
+  --bs-text-opacity: 1;
+  color: black !important;
 }

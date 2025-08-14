@@ -20,13 +20,21 @@
       <ul>
         <% attendance.enrollments.default_order.each do |enrollment| %>
           <li>
-            <%= enrollment.name %>
-            <span class="badge bg-secondary">
+            <span class="badge <%= badge_class_for_role(enrollment.role.to_sym) %>">
               <%= enrollment.role.humanize %>
             </span>
+            <%= enrollment.name %>
           </li>
         <% end %>
       </ul>
+    </div>
+    <div class="role-counts mt-3">
+      <strong>Roles:</strong>
+      <div>
+        <% @role_counts.each do |role, count| %>
+          <div class="badge bg-secondary"><%= role.humanize %>: <%= count %> </div>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="card-footer">
