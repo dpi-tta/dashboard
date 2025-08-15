@@ -1,0 +1,22 @@
+<%= render "cohorts/tabs" %>
+
+<div class="modal fade" id="newFeedbackReportModal" tabindex="-1" aria-labelledby="newFeedbackReportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newFeedbackReportModalLabel">Create Feedback Reports</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= render "form" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var modal = new bootstrap.Modal(document.getElementById('newFeedbackReportModal'));
+    modal.show();
+  });
+</script> 

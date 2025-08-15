@@ -1,0 +1,35 @@
+<div class="modal fade" id="feedbackReportsModal" tabindex="-1" aria-labelledby="feedbackReportsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feedbackReportsModalLabel">Feedback Reports</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Content</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @enrollment.feedback_reports.order(created_at: :desc).each do |feedback_report| %>
+              <tr>
+                <td><%= feedback_report.created_at.strftime("%B %d, %Y") %></td>
+                <td><%= feedback_report.message.truncate(100) %></td>
+                <td class="text-end">
+                  <%= link_to "View Report", cohort_feedback_report_path(@cohort, feedback_report), class: "btn btn-sm btn-primary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

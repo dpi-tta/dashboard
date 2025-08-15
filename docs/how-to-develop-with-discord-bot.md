@@ -39,3 +39,14 @@ Again this will not be necessary, but it is here as a reference if the bot ever 
 3. Click on `Installation` and copy the `Invite Link`
 4. Add this query parameter to the end of the invite URL to set permissions: `&scope=bot&permissions=3072` (3072 is the bit math for `Send Messages` and `View Channels` the minimum permissions required for the bot to work. Based on a later feature **you might need to recalculate this**)
 5. Select the server you want to invite the bot to and click `Authorize`. If you cannot find the server, you might not have enough permissions to add the bot to the server.
+
+## Links to Bots
+
+- [Development Bot Invite Link](https://discord.com/oauth2/authorize?client_id=1352006895841316975&scope=bot&permissions=3072)
+- [Production Bot Invite Link](https://discord.com/oauth2/authorize?client_id=1349847655794343996&scope=bot&permissions=3072)
+
+## Troubleshooting
+
+- If you cannot add the bot to a server, you might not have the necessary permissions. Ask Ian for the permissions you need or have him add the bot to the server.
+- If the messages are not sending, check that the bot's permissions were set correctly when inviting it to the server.
+- If permissions were set correctly, a server can have specific role permissions that might override the bot's permissions. Ensure that the bot contains a role that has the permissions it needs.

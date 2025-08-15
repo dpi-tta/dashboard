@@ -34,4 +34,9 @@
       <%= simple_active_link_to "Impressions", cohort_impressions_path(@cohort), class: "nav-link" %>
     </li>
   <% end %>
+  <% if policy(@cohort).cohort_feedback_reports? %>
+    <li class="nav-item">
+      <%= simple_active_link_to "Feedback Reports", cohort_feedback_reports_path(@cohort), class: "nav-link" %>
+    </li>
+  <% end %>
 </ul>

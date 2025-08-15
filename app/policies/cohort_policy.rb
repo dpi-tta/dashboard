@@ -75,4 +75,8 @@ class CohortPolicy < ApplicationPolicy
   def discord?
     user.admin? || user.cohort_instructor?(record) || user.cohort_teaching_assistant?(record) || user.cohort_staff?(record)
   end
+
+  def cohort_feedback_reports?
+    user.admin? || user.cohort_instructor?(record) || user.cohort_teaching_assistant?(record)
+  end
 end

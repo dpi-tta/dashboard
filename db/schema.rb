@@ -205,6 +205,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_202614) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "feedback_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "enrollment_id", null: false
+    t.uuid "canvas_gradebook_snapshot_id", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.text "message", null: false
+    t.boolean "sent", default: false
+    t.string "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["canvas_gradebook_snapshot_id"], name: "index_feedback_reports_on_canvas_gradebook_snapshot_id"
+    t.index ["enrollment_id", "canvas_gradebook_snapshot_id", "start_date", "end_date"], name: "index_feedback_reports_on_unique_constraint", unique: true
+    t.index ["enrollment_id"], name: "index_feedback_reports_on_enrollment_id"
+  end
+
   create_table "impressions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "author_id", null: false
     t.uuid "subject_id", null: false
@@ -357,6 +372,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_202614) do
   add_foreign_key "devto_articles", "users", column: "author_id"
   add_foreign_key "enrollments", "cohorts"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "feedback_reports", "canvas_gradebook_snapshots"
+  add_foreign_key "feedback_reports", "enrollments"
   add_foreign_key "impressions", "enrollments", column: "subject_id"
   add_foreign_key "impressions", "users", column: "author_id"
   add_foreign_key "piazza_activity_breakdowns", "enrollments"

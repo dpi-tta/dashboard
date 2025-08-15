@@ -40,4 +40,14 @@ class CanvasGradebookSnapshot < ApplicationRecord
   def downloaded_at_humanized
     downloaded_at.strftime("%Y-%m-%d")
   end
+
+  def create_feedback_reports(start_date, end_date, assignments)
+    FeedbackReport.batch_create(
+      cohort,
+      self,
+      start_date,
+      end_date,
+      assignments
+    )
+  end
 end

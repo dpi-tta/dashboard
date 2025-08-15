@@ -28,6 +28,7 @@ class Cohort < ApplicationRecord
   has_many :users, through: :enrollments, source: :user
   has_many :attendances
   has_many :recurring_messages, dependent: :destroy
+  has_many :feedback_reports, through: :enrollments
 
   validates :year, presence: true
   validates :month, presence: true

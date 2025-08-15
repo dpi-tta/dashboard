@@ -1,8 +1,13 @@
 class DiscordService
+  def initialize(cohort = nil)
+    @bot = DISCORD_BOT
+    @cohort = cohort
+  end
+
   def fetch_channels(discord_server_id)
     return [] if discord_server_id.blank?
 
-    server = DISCORD_BOT.server(discord_server_id.to_i)
+    server = @bot.servers[discord_server_id.to_i]
     return [] unless server
 
     server.channels
@@ -14,7 +19,7 @@ class DiscordService
   end
 
   def fetch_channel(server_id, channel_id)
-    channel = DISCORD_BOT.channel(channel_id.to_i)
+    channel = @bot.channel(channel_id.to_i)
     return nil unless channel && channel.type == 0
 
     {
@@ -28,7 +33,7 @@ class DiscordService
   end
 
   def fetch_recent_messages(channel_id, limit = 10)
-    channel = DISCORD_BOT.channel(channel_id.to_i)
+    channel = @bot.channel(channel_id.to_i)
     return [] unless channel && channel.type == 0
 
     channel.history(limit).map do |msg|
@@ -43,6 +48,20 @@ class DiscordService
   rescue => e
     Rails.logger.error("[DiscordService#fetch_recent_messages] Error: #{e.message}")
     []
+  end
+
+  def send_dm(discord_id, message)
+    return if discord_id.blank? || message.blank? || @cohort.blank?
+
+    user = @bot.user(discord_id.to_i)
+    return unless user
+
+    dm_channel = user.dm
+
+    dm_channel.send_message(message)
+  rescue => e
+    Rails.logger.error("[DiscordService#send_dm] Error: #{e.message}")
+    raise e
   end
 
   # TODO: Find a way to optimize this to reduce O(N)^2 before implementing
@@ -90,10 +109,11 @@ class DiscordService
   def send_message(channel_id, content)
     return if channel_id.blank? || content.blank?
 
-    channel = DISCORD_BOT.channel(channel_id.to_i)
+    channel = @bot.channel(channel_id.to_i)
     channel&.send_message(content)
   rescue => e
     Rails.logger.error("[DiscordService#send_message] Error: #{e.message}")
+    raise e
   end
 
   private

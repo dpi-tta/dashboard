@@ -1,0 +1,52 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Period</th>
+        <th>Created</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @feedback_reports.each do |report| %>
+        <tr>
+          <td><%= report.enrollment.user.name %></td>
+          <td>
+            <%= report.start_date.strftime("%B %d, %Y") %> - 
+            <%= report.end_date.strftime("%B %d, %Y") %>
+          </td>
+          <td><%= report.created_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+          <td>
+            <% if report.sent? %>
+              <span class="badge bg-success">
+                <i class="fa-solid fa-check-circle me-1"></i> Sent
+              </span>
+            <% elsif report.error_message.present? %>
+              <span class="badge bg-danger">
+                <i class="fa-solid fa-exclamation-circle me-1"></i> Failed
+              </span>
+            <% else %>
+              <span class="badge bg-info">
+                <i class="fa-solid fa-clock me-1"></i> Pending
+              </span>
+            <% end %>
+          </td>
+          <td>
+            <div class="btn-group">
+              <%= link_to "View", cohort_feedback_report_path(@cohort, report), 
+                  class: "btn btn-sm btn-outline-primary" %>
+              <% unless report.sent? %>
+                <%= button_to "Send", send_report_cohort_feedback_report_path(@cohort, report),
+                    method: :post,
+                    class: "btn btn-sm btn-outline-success",
+                    form: { data: { turbo_confirm: "Are you sure you want to send this feedback report?" } } %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div> 

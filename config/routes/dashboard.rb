@@ -28,6 +28,14 @@ constraints subdomain: "dashboard" do
         get "search"
       end
     end
+    resources :feedback_reports, module: :cohort do
+      member do
+        post :send_report
+      end
+      collection do
+        post :batch, action: :batch_create
+      end
+    end
     resources :impressions, module: :cohort do
       collection do
         get :search

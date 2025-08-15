@@ -1,0 +1,67 @@
+<%= render "modal" do %>
+  <% if @cohort.canvas_gradebook_snapshots.any? %>
+    <%= form_tag batch_cohort_feedback_reports_path(@cohort), method: :post, id: "feedback-report-form", 
+        data: { controller: "feedback-reports", feedback_reports_cohort_id_value: @cohort.id } do %>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fa-solid fa-info-circle me-2"></i> This will generate feedback reports for all students in the cohort. You can review and send them later.
+        </div>
+        
+        <div class="mb-3">
+          <label for="canvas_gradebook_snapshot_id" class="form-label">Canvas Gradebook Snapshot</label>
+          <%= select_tag :canvas_gradebook_snapshot_id, 
+              options_from_collection_for_select(@cohort.canvas_gradebook_snapshots.default_order, :id, :to_s),
+              class: "form-select",
+              required: true,
+              data: { feedback_reports_target: "snapshotSelect" } %>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="start_date" class="form-label">Start Date</label>
+            <%= date_field_tag :start_date, 2.weeks.ago.to_date, class: "form-control", required: true %>
+          </div>
+          <div class="col-md-6">
+            <label for="end_date" class="form-label">End Date</label>
+            <%= date_field_tag :end_date, Date.today, class: "form-control", required: true %>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label">Select Assignments</label>
+          <div class="d-flex mb-2">
+            <button type="button" class="btn btn-sm btn-outline-primary me-2" data-feedback-reports-target="selectAllBtn">Select All</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-feedback-reports-target="clearAllBtn">Clear All</button>
+          </div>
+          <div class="assignment-list" data-feedback-reports-target="assignmentList">
+            <% if @cohort.canvas_gradebook_snapshots.default_order.first&.canvas_assignments&.any? %>
+              <% @cohort.canvas_gradebook_snapshots.default_order.first.canvas_assignments.each do |assignment| %>
+                <div class="form-check">
+                  <%= check_box_tag "assignments[]", assignment.id, true, class: "form-check-input assignment-checkbox", id: "assignment-#{assignment.id}" %>
+                  <label for="assignment-<%= assignment.id %>" class="form-check-label"><%= assignment.name %></label>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-exclamation-triangle me-2"></i> No assignments found in the selected snapshot.
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" data-feedback-reports-target="generateBtn">Generate Reports</button>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="modal-body">
+      <div class="alert alert-warning">
+        <i class="fa-solid fa-exclamation-triangle me-2"></i> Please upload a Canvas gradebook snapshot before attempting to use this tool.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+  <% end %>
+<% end %> 

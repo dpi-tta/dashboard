@@ -15,8 +15,9 @@ An application that helps students, instructors, administrators, employers, and 
 - [Upload a piazza activity report](./docs/how-to-upload-piazza-activity-report.md)
 - [Upload canvas gradebook snapshot](./docs/how-to-upload-canvas-gradebook-snapshot.md)
 - [Provide feedback](./docs/how-to-provide-feedback.md)
+- [Develop with Discord Bot and Add the Bot to a Server](./docs/how-to-develop-with-discord-bot.md)
+- [Use Feedback Reports](./docs/how-to-use-feedback-reports.md)
 - [Contribute](./docs/how-to-contribute.md)
-
 
 ## Domain model
 

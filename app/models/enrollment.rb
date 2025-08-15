@@ -62,6 +62,7 @@ class Enrollment < ApplicationRecord
   has_many :impressions, foreign_key: "subject_id", dependent: :destroy
   has_many :attendees, dependent: :destroy
   has_many :attendances, through: :attendees
+  has_many :feedback_reports, dependent: :destroy
 
   scope :default_order, -> { joins(:user).order(User.arel_table[:first_name].asc) }
   scope :student, -> { where(role: "student") }
