@@ -126,42 +126,6 @@ module FeedbackReport::Processable
       )
     end
 
-    def _send_feedback_report(feedback_report, enrollment, cohort)
-      _deliver_report(feedback_report, enrollment, cohort)
-    rescue => e
-      Rails.logger.error "Error in _send_feedback_report for Report ID #{feedback_report.id}, Enrollment ID #{enrollment.id}: #{e.message}"
-      raise
-    end
-
-    def _deliver_report(report, enrollment, cohort)
-      discord_service = DiscordService.new(cohort)
-      discord_service.send_dm(enrollment.user.discord_id, report.message)
-      report.mark_as_sent!
-    rescue => e
-      Rails.logger.error "Error in _deliver_report for Report ID #{report.id}, Enrollment ID #{enrollment.id}: #{e.message}"
-      report.mark_as_failed!(e)
-      raise
-    end
-
-    def delete_existing_reports(cohort, canvas_gradebook_snapshot, start_date, end_date)
-      deleted_count = 0
-      find_params = {
-        canvas_gradebook_snapshot: canvas_gradebook_snapshot,
-        start_date: start_date,
-        end_date: end_date,
-      }
-
-      cohort.enrollments.student.each do |enrollment|
-        existing_reports = where(find_params.merge(enrollment: enrollment))
-
-        if existing_reports.any?
-          deleted_count += existing_reports.count
-          existing_reports.destroy_all
-        end
-      end
-      deleted_count
-    end
-
     def process_student_enrollments(cohort)
       student_enrollments = cohort.enrollments.student
       student_enrollments.each do |enrollment|

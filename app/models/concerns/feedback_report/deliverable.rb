@@ -12,24 +12,31 @@ module FeedbackReport::Deliverable
     end
 
     begin
-      current_cohort = self.enrollment&.cohort || self.canvas_gradebook_snapshot&.cohort
-      unless current_cohort
-        error_message = "Cannot determine cohort for FeedbackReport #{id}. Report cannot be sent."
-        Rails.logger.error("[FeedbackReportDelivery] #{error_message}")
-        mark_as_failed!(StandardError.new(error_message))
-        return [false, error_message]
-      end
-
-      self.class.send(:_send_feedback_report, self, self.enrollment, current_cohort)
-      
+      deliver_via_discord
       success_message = "Feedback report was successfully sent to #{enrollment.user.name}."
       Rails.logger.info("[FeedbackReportDelivery] #{success_message}")
       [true, success_message]
     rescue => e
       error_message = "Failed to send feedback report for #{enrollment.user.name}: #{e.message}"
-      Rails.logger.error("[FeedbackReportDelivery] #{error_message}\nBacktrace: #{e.backtrace.join("\n")}")
-      mark_as_failed!(e)
       [false, error_message]
     end
+  end
+
+  private
+
+  def deliver_via_discord
+    current_cohort = enrollment&.cohort
+    unless current_cohort
+      raise "Cannot determine cohort for FeedbackReport #{id}. Report cannot be sent."
+    end
+
+    discord_service = DiscordService.new(current_cohort)
+    discord_service.send_dm(enrollment.user.discord_id, message)
+    mark_as_sent!
+  rescue => e
+    error_message = "Error in deliver_via_discord for Report ID #{id}, Enrollment ID #{enrollment.id}: #{e.message}"
+    Rails.logger.error("#{error_message}\nBacktrace: #{e.backtrace.join("\n")}")
+    mark_as_failed!(e)
+    raise
   end
 end
